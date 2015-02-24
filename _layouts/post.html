@@ -28,7 +28,13 @@ layout: default
 				{{ content }}
 
                 <hr>
+                
+                {% include share-page.html %}                
 
+                <hr>
+
+                {% include disqus.html %}
+                
                 <ul class="pager">
                     {% if page.previous.url %}
                     <li class="previous">

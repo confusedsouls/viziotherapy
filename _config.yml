@@ -1,13 +1,13 @@
 # Site settings
-title: Clean Blog
-header-img: img/home-bg.jpg
-email: your-email@yourdomain.com
+title: viziotherapy
+header-img: img/home-bg-perm2.jpg
+email: raghavj1991@gmail.com
 description: "Write your site description here. It will be used as your sites meta description as well!"
-baseurl: "/startbootstrap-clean-blog-jekyll"
-url: "http://yourdomain.com"
-twitter_username: SBootstrap
-github_username:  davidtmiller
-facebook_username:  IronSummitMedia
+baseurl: "/viziotherapy"
+url: "confusedsouls.github.io"
+twitter_username: raghavistic
+github_username:  confusedsouls
+facebook_username:  raghavj1991
 
 # Build settings
 markdown: kramdown

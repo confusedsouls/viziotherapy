@@ -1,15 +1,12 @@
 ---
 layout:     post
-title:      "Popular food cities in India"
-subtitle:   "Cities and their Foodies"
-date:       2015-02-24 12:00:00
+title:      "Most Rated Restaurants in India"
+subtitle:   "because you deserve the best"
+date:       2015-02-25 12:00:00
 author:     "Raghav Jalan"
 header-img: "img/post-bg-01.jpg"
 comments: true
 ---
-<p><a href="https://www.zomato.com">Zomato</a>, with its recent acquisition of <a href="http://www.urbanspoon.com/">Urbanspoon</a>
-is becoming a goto service for all the foodies in the world. Interestingly enough, I thought how many restaurants have they covered in India? This histogram explains this. 
-</p>
 <style type="text/css">
 
 .bar {
@@ -17,11 +14,13 @@ is becoming a goto service for all the foodies in the world. Interestingly enoug
 }
 
 .bar:hover {
-  fill: #6600CC;
+  fill: brown;
 }
-
+.heading {
+  font: 40px Arial;
+}
 .axis {
-  font: 10px sans-serif;
+  font: 10px Arial;
 }
 
 .axis path,
@@ -35,13 +34,44 @@ is becoming a goto service for all the foodies in the world. Interestingly enoug
   display: none;
 }
 
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
 </style>
 
 <div id = "example"></div>
 
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 70, left: 25},
+var margin = {top: 40, right: 20, bottom: 70, left: 25},
     width = 800 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -60,14 +90,24 @@ var yAxis = d3.svg.axis()
     .orient("left")
     .ticks(5, "s");
 
+var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "<strong>Share:</strong> <span style='color:red'>" + Math.round(d.share*100)/100  + " %</span>";
+    });
+
+
 var svg = d3.select("div#example").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("/viziotherapy/data/city-count.csv", type, function(error, data) {
-  x.domain(data.map(function(d) { return d.city; }));
+svg.call(tip);
+
+d3.csv("/viziotherapy/data/rating-count.csv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.rating; }));
   y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
   svg.append("g")
@@ -96,20 +136,25 @@ d3.csv("/viziotherapy/data/city-count.csv", type, function(error, data) {
       .data(data)
     .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.city); })
+      .style("fill", function(d) { return d.color;})
+      .attr("x", function(d) { return x(d.rating); })
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.count); })
       .attr("height", function(d) { return height - y(d.count); })
-      .append("svg:title")
-      .text(function(d) {return d.city + " : " + d.count});
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
 
 });
+
+  svg.append("text")
+      .attr("x", 500)
+      .attr("y", 20)
+      .style("font-size", "40px")
+      .style("fill", "#CB202D")
+      .text("Total: 53,607");
 
 function type(d) {
   d.count = +d.count;
   return d;
 }
 </script>
-
-<p>They have covered over 36 cities in India, indexing over 53,607 resataurants in their database. NCR region leads the herd with app. 10k restaurants, with Mumbai coming second with its impressive 9k score.</p>
-<p>You can download the file I used for the above graph from <a href="/viziotherapy/data/city-count.csv">here</a></p>
